@@ -1,92 +1,8 @@
-
-
-import 'package:first_flutter_app/main.dart';
+import 'package:first_flutter_app/delivery.dart';
 import 'package:flutter/material.dart';
 import 'notifications_screen.dart';
-import 'package:first_flutter_app/menu_screen.dart';
 import 'menulist.dart';
-
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Espresso Avenue',
-      theme: ThemeData.light(),
-      darkTheme: ThemeData.dark(),
-      themeMode: ThemeMode.light,
-      home: MenuScreen(),
-    );
-  }
-}
-
-class MenuScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Espresso Avenue'),
-        backgroundColor: Colors.brown,
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Your existing content
-            // ...
-          ],
-        ),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.brown,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            IconButton(
-              icon: Icon(Icons.home, color: Colors.white),
-              onPressed: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => MenuScreen()),
-                // );
-              },
-            ),
-            IconButton(
-              icon: Icon(Icons.menu_book, color: Colors.white),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MenuList()),
-                );
-              },
-            ),
-            IconButton(
-              icon: Icon(Icons.notifications, color: Colors.white),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => NotificationsScreen()),
-                );
-              },
-            ),
-            IconButton(
-              icon: Icon(Icons.account_circle, color: Colors.white),
-              onPressed: () {
-                // Navigate to the account screen
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => AccountScreen()),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+import 'main.dart';
 
 class AccountScreen extends StatefulWidget {
   @override
@@ -190,22 +106,25 @@ class _AccountScreenState extends State<AccountScreen> {
                   IconButton(
                     icon: Icon(Icons.home, color: Colors.white),
                     onPressed: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(builder: (context) => MenuScreen()),
-                      // );
-
-                      // Navigate to home or perform home-related action
+                      Navigator.popUntil(context, ModalRoute.withName('/'));
                     },
                   ),
                   IconButton(
-                    icon: Icon(Icons.menu, color: Colors.white),
+                    icon: Icon(Icons.menu_book, color: Colors.white),
                     onPressed: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => MenuList()),
                       );
-                      // Navigate to home or perform home-related action
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.delivery_dining, color: Colors.white),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => DeliveryScreen()),
+                      );
                     },
                   ),
                   IconButton(
@@ -215,13 +134,11 @@ class _AccountScreenState extends State<AccountScreen> {
                         context,
                         MaterialPageRoute(builder: (context) => NotificationsScreen()),
                       );
-                      // Navigate to home or perform home-related action
                     },
                   ),
                   IconButton(
                     icon: Icon(Icons.account_circle, color: Colors.white),
                     onPressed: () {
-                      // Navigate to the account screen
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => AccountScreen()),

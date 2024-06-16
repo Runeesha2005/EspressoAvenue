@@ -30,6 +30,24 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  firebase_core: ^2.31.0
+  firebase_auth: ^4.19.5
+  http: ^0.13.3
+  connectivity: ^3.0.6
+  shared_preferences: ^2.0.7
+  connectivity_plus: ^2.2.2
+  geolocator: ^7.1.0  # Compatible with Flutter and integrates well with connectivity
+  permission_handler: ^10.0.0  # Handles permissions gracefully alongside geolocator
+  flutter_map: ^0.14.0
+  contacts_service: ^0.6.3
+
+
+
+
+
+
+
+
 
 
 
@@ -48,7 +66,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^2.0.0
+  flutter_lints: ^4.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -87,6 +105,7 @@ flutter:
     - assets/coffee2.jpg
     - assets/coffee3.jpg
     - assets/coffee4.jpg
+    - assets/menu_data.json
 
   #   - images/a_dot_ham.jpeg
 

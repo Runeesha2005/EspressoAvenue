@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <resources>
+        <!-- Replace these values with the corresponding values from your google-services.json file -->
+        <string name="google_app_id">1:518014622271:android:8b8cc6ea825c2f13be768a</string>
+        <string name="google_api_key">AIzaSyD3iaiYlPoTgEZ3KpNagufSQTNEGOzdeP8</string>
+        <string name="firebase_database_url">https://espressoavenue-7637b.firebaseio.com</string>
+        <string name="gcm_defaultSenderId">518014622271</string>
+        <string name="project_id">espressoavenue-7637b</string>
+        <string name="google_storage_bucket">espressoavenue-7637b.appspot.com</string>
+    </resources>
+

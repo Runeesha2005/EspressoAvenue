@@ -1,129 +1,110 @@
-
-
-
+import 'dart:convert';
+import 'package:first_flutter_app/account_screen.dart';
+import 'package:first_flutter_app/cart_screen.dart';
+import 'package:first_flutter_app/delivery.dart';
+import 'package:first_flutter_app/notifications_screen.dart';
 import 'package:flutter/material.dart';
-import 'notifications_screen.dart';
-import 'package:first_flutter_app/menu_screen.dart';
-import 'account_screen.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
-  runApp(MyApp());
-}
+import 'menu_item_detail_screen.dart';
+import 'menu_screen.dart';
 
-class MyApp extends StatelessWidget {
+class MenuList extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Espresso Avenue',
-      theme: ThemeData.light(),
-      darkTheme: ThemeData.dark(),
-      themeMode: ThemeMode.light,
-      home: MenuList(),
-    );
-  }
+  _MenuListState createState() => _MenuListState();
 }
 
-class MenuList extends StatelessWidget {
+class _MenuListState extends State<MenuList> {
+  List<dynamic> menuData = [];
+
+  @override
+  void initState() {
+    super.initState();
+    getMenuData().then((data) {
+      setState(() {
+        menuData = data;
+      });
+    });
+  }
+
+  Future<List<dynamic>> getMenuData() async {
+    final String response = await rootBundle.loadString('assets/menu_data.json');
+    final List<dynamic> data = json.decode(response);
+    return data;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Menu List',
-          style: TextStyle(
-            fontWeight: FontWeight.bold, // Make it bolder
-          ),
+        title: Text('Menu'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
         backgroundColor: Colors.brown,
       ),
-      body: ListView(
-        padding: EdgeInsets.all(16.0),
-        children: [
-          MenuItemCard(
-            itemName: 'Cappuccino',
-            price: 4.99,
-          ),
-          MenuItemCard(
-            itemName: 'Bubble Tea',
-            price: 3.50,
-          ),
-          MenuItemCard(
-            itemName: 'Americano',
-            price: 2.99,
-          ),
-          MenuItemCard(
-            itemName: 'Tuna Sandwich',
-            price: 7.99,
-          ),
-          MenuItemCard(
-            itemName: 'Cheese and Onion Sandwich',
-            price: 6.99,
-          ),
-          MenuItemCard(
-            itemName: 'Chai Tea',
-            price: 4.50,
-          ),
-          MenuItemCard(
-            itemName: 'Fresh Juice',
-            price: 5.99,
-          ),
-          MenuItemCard(
-            itemName: 'Espresso',
-            price: 3.99,
-          ),
-          MenuItemCard(
-            itemName: 'Mocha',
-            price: 5.49,
-          ),
-          MenuItemCard(
-            itemName: 'Chicken Caesar Salad',
-            price: 8.99,
-          ),
-          MenuItemCard(
-            itemName: 'Fruit Parfait',
-            price: 4.99,
-          ),
-          MenuItemCard(
-            itemName: 'Latte',
-            price: 5.99,
-          ),
-          MenuItemCard(
-            itemName: 'Hot Chocolate',
-            price: 4.49,
-          ),
-          MenuItemCard(
-            itemName: 'Iced Coffee',
-            price: 3.99,
-          ),
-          MenuItemCard(
-            itemName: 'Turkey Club Sandwich',
-            price: 9.99,
-          ),
-          MenuItemCard(
-            itemName: 'Bagel with Cream Cheese',
-            price: 2.49,
-          ),
-          MenuItemCard(
-            itemName: 'Matcha Green Tea',
-            price: 6.50,
-          ),
-          MenuItemCard(
-            itemName: 'Vegetarian Wrap',
-            price: 7.49,
-          ),
-          MenuItemCard(
-            itemName: 'Smoothie Bowl',
-            price: 8.50,
-          ),
-          MenuItemCard(
-            itemName: 'Cold Brew Coffee',
-            price: 4.99,
-          ),
-          MenuItemCard(
-            itemName: 'Chocolate Chip Pancakes',
-            price: 6.99,
-          ),
-        ],
+      body: ListView.builder(
+        itemCount: menuData.length,
+        itemBuilder: (context, index) {
+          final menuItem = menuData[index];
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MenuItemDetailScreen(menuItem: menuItem)),
+              );
+            },
+            child: Card(
+              margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Row(
+                  children: [
+                    Image.asset(
+                      menuItem['image'],
+                      width: 100.0,
+                      height: 100.0,
+                      fit: BoxFit.cover,
+                    ),
+                    SizedBox(width: 16.0),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            menuItem['name'],
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 8.0),
+                          Text(
+                            menuItem['description'],
+                            style: TextStyle(fontSize: 16.0),
+                          ),
+                          SizedBox(height: 8.0),
+                          Text(
+                            '\$${menuItem['price'].toStringAsFixed(2)}',
+                            style: TextStyle(
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
       ),
       bottomNavigationBar: BottomAppBar(
         color: Colors.brown,
@@ -133,18 +114,16 @@ class MenuList extends StatelessWidget {
             IconButton(
               icon: Icon(Icons.home, color: Colors.white),
               onPressed: () {
-
+                //Navigator.popUntil(context, ModalRoute.withName('/'));
                 // Navigator.push(
                 //   context,
-                //   MaterialPageRoute(builder: (context) => MenuScreen()),
+                //   MaterialPageRoute(builder: (context) => MenuList()),
                 // );
-                // // Navigate to the home screen or perform home-related action
               },
             ),
             IconButton(
               icon: Icon(Icons.menu_book, color: Colors.white),
               onPressed: () {
-                // Navigate to the menu screen
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => MenuList()),
@@ -152,9 +131,17 @@ class MenuList extends StatelessWidget {
               },
             ),
             IconButton(
+              icon: Icon(Icons.delivery_dining, color: Colors.white),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => DeliveryScreen()),
+                );
+              },
+            ),
+            IconButton(
               icon: Icon(Icons.notifications, color: Colors.white),
               onPressed: () {
-                // Navigate to the notifications screen
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => NotificationsScreen()),
@@ -164,7 +151,6 @@ class MenuList extends StatelessWidget {
             IconButton(
               icon: Icon(Icons.account_circle, color: Colors.white),
               onPressed: () {
-                // Navigate to the account screen
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => AccountScreen()),
@@ -174,48 +160,26 @@ class MenuList extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class MenuItemCard extends StatelessWidget {
-  final String itemName;
-  final double price;
-
-  MenuItemCard({
-    required this.itemName,
-    required this.price,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.only(bottom: 16.0),
-      color: Colors.brown[300],
-      child: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              itemName,
-              style: TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            Text(
-              '\$${price.toStringAsFixed(2)}',
-              style: TextStyle(
-                fontSize: 16.0,
-                color: Colors.white,
-              ),
-            ),
-          ],
-        ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => CartScreen()),
+          );
+        },
+        child: Icon(Icons.shopping_cart),
+        backgroundColor: Colors.brown,
       ),
     );
   }
 }
 
+Future<void> writeToLocalStorage(String key, String value) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setString(key, value);
+}
+
+Future<String?> readFromLocalStorage(String key) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString(key);
+}

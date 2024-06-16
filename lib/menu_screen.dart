@@ -1,15 +1,74 @@
-
-
+import 'package:first_flutter_app/caffeine_kick.dart';
+import 'package:first_flutter_app/delivery.dart';
 import 'package:first_flutter_app/discount_screen.dart';
+import 'package:first_flutter_app/healthy_start.dart';
+import 'package:first_flutter_app/morning_bliss.dart';
 import 'package:first_flutter_app/points_screen.dart';
+import 'package:first_flutter_app/savoury.dart';
+import 'package:first_flutter_app/sweet_tooth.dart';
 import 'package:flutter/material.dart';
 import 'cart_screen.dart';
 import 'notifications_screen.dart';
 import 'account_screen.dart';
-import 'menulist.dart'; // Import the MenuList page
+import 'menulist.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'dart:async';
 
-class MenuScreen extends StatelessWidget {
+class MenuScreen extends StatefulWidget {
+  @override
+  _MenuScreenState createState() => _MenuScreenState();
+}
 
+class _MenuScreenState extends State<MenuScreen> {
+  String _connectionStatus = 'Unknown';
+  final Connectivity _connectivity = Connectivity();
+  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    _initConnectivity();
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+  }
+
+  Future<void> _initConnectivity() async {
+    ConnectivityResult result;
+    try {
+      result = await _connectivity.checkConnectivity();
+    } catch (e) {
+      result = ConnectivityResult.none;
+    }
+
+    if (!mounted) {
+      return Future.value(null);
+    }
+
+    return _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    switch (result) {
+      case ConnectivityResult.wifi:
+        setState(() => _connectionStatus = 'Connected to WiFi');
+        break;
+      case ConnectivityResult.mobile:
+        setState(() => _connectionStatus = 'Connected to Mobile Network');
+        break;
+      case ConnectivityResult.none:
+        setState(() => _connectionStatus = 'No Internet Connection');
+        break;
+      default:
+        setState(() => _connectionStatus = 'Unknown');
+        break;
+    }
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,110 +83,159 @@ class MenuScreen extends StatelessWidget {
         ),
         backgroundColor: Colors.brown,
       ),
-      body: ListView(
+      body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          Container(
+            width: double.infinity,
+            color: Colors.brown,
+            padding: EdgeInsets.all(8.0),
+            child: Text(
+              _connectionStatus,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16.0,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Expanded(
+            child: ListView(
               children: [
-                SizedBox(height: 16.0),
-                Text(
-                  'Welcome to Espresso Avenue!',
-                  style: TextStyle(
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.bold,
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 16.0),
+                      Text(
+                        'Welcome to Espresso Avenue!',
+                        style: TextStyle(
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 10.0),
+                    ],
                   ),
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    RoundedImage(
+                      label: 'Menu List',
+                      imagePath: 'assets/menu1.jpg',
+                      onTap: () {
+                        // Navigate to the MenuList page
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => MenuList()),
+                        );
+                      },
+                    ),
+                    RoundedImage(
+                      label: 'Discounts',
+                      imagePath: 'assets/shoppingcart.jpg',
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => DiscountScreen()),
+                        );
+                      },
+                    ),
+                    RoundedImage(
+                      label: 'Points',
+                      imagePath: 'assets/round1.jpg',
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => PointsScreen()),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 20.0, bottom: 10.0),
+                  child: Text(
+                    'The 5 Famous Combos in our Cafe !',
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.brown,
+                    ),
+                  ),
+                ),
+                MobileCard(
+                  modelName: 'Esspresso, Croissant, Fresh Orange Juice',
+                  brandName: 'Morning Bliss Combo :',
+                  price: 9.99,
+                  rating: 5, // Rating in stars
+                  imagePath: 'assets/morningBliss.jpg',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => MorningBlissScreen()),
+                    );
+                  },
+                ),
                 SizedBox(height: 10.0),
+                MobileCard(
+                  modelName: 'Green Tea, Avocado Toast, Fresh Fruit Salad',
+                  brandName: 'Healthy Start Combo :',
+                  price: 7.50,
+                  rating: 5, // Rating in stars
+                  imagePath: 'assets/healthyStart1.jpeg',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => HealthyStartScreen()),
+                    );
+                  },
+                ),
+                SizedBox(height: 10.0),
+                MobileCard(
+                  modelName: 'Americano, Chocolate Donut, Banana Walnut Muffin',
+                  brandName: 'Caffeine Kick Combo :',
+                  price: 11.50,
+                  rating: 5, // Rating in stars
+                  imagePath: 'assets/caffeineCick.jpg',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => CaffeineKickScreen()),
+                    );
+                  },
+                ),
+                SizedBox(height: 10.0),
+                MobileCard(
+                  modelName: 'Caramel Macchiato, Blueberry Muffin, Chocolate Chip Cookie',
+                  brandName: 'Sweet Tooth Combo :',
+                  price: 8.99,
+                  rating: 4, // Rating in stars
+                  imagePath: 'assets/sweetTooth.jpg',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SweetToothScreen()),
+                    );
+                  },
+                ),
+                SizedBox(height: 10.0),
+                MobileCard(
+                  modelName: 'Chai Latte, Spinach Feta Wrap, Tomato Basil Soup',
+                  brandName: 'Savoury Combo :',
+                  price: 11.50,
+                  rating: 4, // Rating in stars
+                  imagePath: 'assets/savourySip.jpg',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SavouryScreen()),
+                    );
+                  },
+                ),
               ],
             ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              RoundedImage(
-                label: 'Menu List',
-                imagePath: 'assets/menu1.jpg',
-                onTap: () {
-                  // Navigate to the MenuList page
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => MenuList()),
-                  );
-                },
-              ),
-              RoundedImage(
-                label: 'Discounts',
-                imagePath: 'assets/shoppingcart.jpg',
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => DiscountScreen()),
-                  );
-                },
-              ),
-              RoundedImage(
-                label: 'Points',
-                imagePath: 'assets/round1.jpg',
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => PointsScreen()),
-                  );
-                },
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 20.0, bottom: 10.0),
-            child: Text(
-              'The 5 Famous Combos in our Cafe !',
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.brown,
-              ),
-            ),
-          ),
-          MobileCard(
-            modelName: 'Esspresso, Croissant, Fresh Orange Juice',
-            brandName: 'Morning Bliss Combo :',
-            price: 9.99,
-            rating: 5, // Rating in stars
-            imagePath: 'assets/morningBliss.jpg',
-          ),
-          SizedBox(height: 10.0),
-          MobileCard(
-            modelName: 'Green Tea, Avocado Toast, Fresh Fruit Salad',
-            brandName: 'Healthy Start Combo :',
-            price: 7.50,
-            rating: 5, // Rating in stars
-            imagePath: 'assets/healthyStart1.jpeg',
-          ),
-          SizedBox(height: 10.0),
-          MobileCard(
-            modelName: 'Americano, Chocolate Donut, Banana Walnut Muffin',
-            brandName: 'Caffeine Kick Combo :',
-            price: 11.50,
-            rating: 5, // Rating in stars
-            imagePath: 'assets/caffeineCick.jpg',
-          ),
-          SizedBox(height: 10.0),
-          MobileCard(
-            modelName: 'Caramel Macchiato, Blueberry Muffin, Chocolate Chip Cookie',
-            brandName: 'Sweet Tooth Combo :',
-            price: 8.99,
-            rating: 4, // Rating in stars
-            imagePath: 'assets/sweetTooth.jpg',
-          ),
-          SizedBox(height: 10.0),
-          MobileCard(
-            modelName: 'Chai Latte, Spinach Feta Wrap, Tomato Basil Soup',
-            brandName: 'Savoury Combo :',
-            price: 11.50,
-            rating: 4, // Rating in stars
-            imagePath: 'assets/savourySip.jpg',
           ),
         ],
       ),
@@ -150,6 +258,15 @@ class MenuScreen extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => MenuList()),
+                );
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.delivery_dining, color: Colors.white),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => DeliveryScreen()),
                 );
               },
             ),
@@ -188,14 +305,13 @@ class MenuScreen extends StatelessWidget {
   }
 }
 
-// ... rest of your existing code
-
 class MobileCard extends StatelessWidget {
   final String modelName;
   final String brandName;
   final double price;
   final int rating; // New field for rating
   final String imagePath;
+  final VoidCallback onTap;
 
   MobileCard({
     required this.modelName,
@@ -203,6 +319,7 @@ class MobileCard extends StatelessWidget {
     required this.price,
     required this.rating,
     required this.imagePath,
+    required this.onTap,
   });
 
   @override
@@ -211,17 +328,30 @@ class MobileCard extends StatelessWidget {
       margin: EdgeInsets.all(8.0),
       color: Colors.brown[300], // Set the background color to red
       child: InkWell(
-        onTap: () {
-          // Handle the tap on the mobile card
-        },
+        onTap: onTap,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset(
-              imagePath,
-              fit: BoxFit.cover,
-              height: 150.0,
-              width: double.infinity,
+            Stack(
+              alignment: Alignment.topRight,
+              children: [
+                Image.asset(
+                  imagePath,
+                  fit: BoxFit.cover,
+                  height: 150.0,
+                  width: double.infinity,
+                ),
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: IconButton(
+                    icon: Icon(Icons.add_shopping_cart, color: Colors.white),
+                    onPressed: () {
+                      // Add to cart functionality
+                    },
+                  ),
+                ),
+              ],
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -303,4 +433,3 @@ class RoundedImage extends StatelessWidget {
     );
   }
 }
-

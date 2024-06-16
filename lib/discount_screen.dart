@@ -1,9 +1,9 @@
-
 import 'package:first_flutter_app/menulist.dart';
-import 'package:first_flutter_app/registerationPage.dart';
 import 'package:flutter/material.dart';
 import 'notifications_screen.dart';
 import 'account_screen.dart';
+import 'cart_screen.dart';
+import 'delivery.dart';
 
 class DiscountScreen extends StatelessWidget {
   @override
@@ -67,17 +67,12 @@ class DiscountScreen extends StatelessWidget {
             IconButton(
               icon: Icon(Icons.home, color: Colors.white),
               onPressed: () {
-                // Navigate to the home screen or perform home-related action
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => MenuScreen4()),
-                // );
+                Navigator.popUntil(context, ModalRoute.withName('/'));
               },
             ),
             IconButton(
               icon: Icon(Icons.menu_book, color: Colors.white),
               onPressed: () {
-                // Navigate to the menu screen
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => MenuList()),
@@ -85,9 +80,17 @@ class DiscountScreen extends StatelessWidget {
               },
             ),
             IconButton(
+              icon: Icon(Icons.delivery_dining, color: Colors.white),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => DeliveryScreen()),
+                );
+              },
+            ),
+            IconButton(
               icon: Icon(Icons.notifications, color: Colors.white),
               onPressed: () {
-                // Navigate to the notifications screen
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => NotificationsScreen()),
@@ -97,7 +100,6 @@ class DiscountScreen extends StatelessWidget {
             IconButton(
               icon: Icon(Icons.account_circle, color: Colors.white),
               onPressed: () {
-                // Navigate to the account screen
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => AccountScreen()),
@@ -106,6 +108,16 @@ class DiscountScreen extends StatelessWidget {
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => CartScreen()),
+          );
+        },
+        child: Icon(Icons.shopping_cart),
+        backgroundColor: Colors.brown,
       ),
     );
   }

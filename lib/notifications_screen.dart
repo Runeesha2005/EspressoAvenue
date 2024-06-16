@@ -1,4 +1,5 @@
 
+import 'package:first_flutter_app/delivery.dart';
 import 'package:flutter/material.dart';
 import 'menulist.dart';
 import 'account_screen.dart';
@@ -54,6 +55,15 @@ class NotificationsScreen extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => MenuList()),
+                );
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.delivery_dining, color: Colors.white),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => DeliveryScreen()),
                 );
               },
             ),

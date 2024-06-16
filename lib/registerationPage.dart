@@ -1,8 +1,13 @@
-
-
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart'; // Import Firebase Core
+import 'package:firebase_auth/firebase_auth.dart';
 
-void main() {
+void main() async {
+  // Ensure Firebase is initialized before runApp
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
+  // Run the app
   runApp(MyApp());
 }
 
@@ -20,37 +25,40 @@ class MyApp extends StatelessWidget {
 }
 
 class RegisterPage extends StatelessWidget {
-  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Register Now helloooo'),
+        title: Text('Register Now'),
         backgroundColor: Colors.brown,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              'Register Now',
+              'Create an Account',
               style: TextStyle(
                 fontSize: 24.0,
                 fontWeight: FontWeight.bold,
                 color: Colors.brown,
               ),
+              textAlign: TextAlign.center,
             ),
             SizedBox(height: 20.0),
             TextFormField(
-              controller: usernameController,
+              controller: emailController,
+              keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
-                labelText: 'Username',
-                fillColor: Colors.brown[50],
+                labelText: 'Email',
+                fillColor: Colors.white,
                 filled: true,
+                border: OutlineInputBorder(),
               ),
             ),
             SizedBox(height: 10.0),
@@ -59,28 +67,42 @@ class RegisterPage extends StatelessWidget {
               obscureText: true,
               decoration: InputDecoration(
                 labelText: 'Password',
-                fillColor: Colors.brown[50],
+                fillColor: Colors.white,
                 filled: true,
+                border: OutlineInputBorder(),
               ),
             ),
             SizedBox(height: 20.0),
-            MaterialButton(
-              onPressed: () {
-                // Add your registration logic here
-                String username = usernameController.text;
-                String password = passwordController.text;
-
-                // You can store the user data, validate input, etc.
-
-                // After successful registration, navigate to another page
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MenuScreen4()),
-                );
+            ElevatedButton(
+              onPressed: () async {
+                try {
+                  await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                    email: emailController.text,
+                    password: passwordController.text,
+                  );
+                  // Registration successful, navigate to login page
+                  Navigator.pop(context); // Go back to the login page
+                } catch (e) {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Registration Failed'),
+                        content: Text(e.toString()),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('OK'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                }
               },
               child: Text('Register'),
-              color: Colors.brown,
-              textColor: Colors.white,
             ),
           ],
         ),
@@ -90,7 +112,7 @@ class RegisterPage extends StatelessWidget {
 }
 
 class LoginPage extends StatelessWidget {
-  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
   @override
@@ -116,9 +138,10 @@ class LoginPage extends StatelessWidget {
             ),
             SizedBox(height: 20.0),
             TextFormField(
-              controller: usernameController,
+              controller: emailController,
+              keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
-                labelText: 'Username',
+                labelText: 'Email',
                 fillColor: Colors.brown[50],
                 filled: true,
               ),
@@ -134,61 +157,48 @@ class LoginPage extends StatelessWidget {
               ),
             ),
             SizedBox(height: 20.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                MaterialButton(
-                  onPressed: () {
-                    // Simulate login action
-                    String username = usernameController.text;
-                    String password = passwordController.text;
-
-                    // Add your authentication logic here
-                    if (username == 'example' && password == 'password') {
-                      // Navigate to the home page or perform the desired action
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => MenuScreen4()),
+            ElevatedButton(
+              onPressed: () async {
+                try {
+                  await FirebaseAuth.instance.signInWithEmailAndPassword(
+                    email: emailController.text,
+                    password: passwordController.text,
+                  );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MenuScreen4()),
+                  );
+                } catch (e) {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Login Failed'),
+                        content: Text('Invalid email or password.'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('OK'),
+                          ),
+                        ],
                       );
-                    } else {
-                      // Show error message or handle authentication failure
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text('Login Failed'),
-                            content: Text('Invalid username or password.'),
-                            actions: [
-                              MaterialButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text('OK'),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    }
-                  },
-                  child: Text('Login'),
-                  color: Colors.brown,
-                  textColor: Colors.white,
-                ),
-                SizedBox(width: 10.0),
-                MaterialButton(
-                  onPressed: () {
-                    // Navigate to the registration page
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => RegisterPage()),
-                    );
-                  },
-                  child: Text('Register Now'),
-                  color: Colors.brown,
-                  textColor: Colors.white,
-                ),
-              ],
+                    },
+                  );
+                }
+              },
+              child: Text('Login'),
+            ),
+            SizedBox(height: 12.0),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => RegisterPage()),
+                );
+              },
+              child: Text('Register Now'),
             ),
           ],
         ),
@@ -209,3 +219,4 @@ class MenuScreen4 extends StatelessWidget {
     );
   }
 }
+

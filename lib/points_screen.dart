@@ -1,11 +1,39 @@
-
+import 'package:first_flutter_app/delivery.dart';
 import 'package:first_flutter_app/menulist.dart';
 import 'package:flutter/material.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'notifications_screen.dart';
-import 'menu_screen.dart';
+//import 'menu_screen.dart';
 import 'account_screen.dart';
 
-class PointsScreen extends StatelessWidget {
+class PointsScreen extends StatefulWidget {
+  @override
+  _PointsScreenState createState() => _PointsScreenState();
+}
+
+class _PointsScreenState extends State<PointsScreen> {
+  String _connectionStatus = 'Unknown';
+  late Connectivity _connectivity;
+
+  @override
+  void initState() {
+    super.initState();
+    _connectivity = Connectivity();
+    _initializeConnectivity();
+    _connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
+      setState(() {
+        _connectionStatus = result.toString();
+      });
+    });
+  }
+
+  Future<void> _initializeConnectivity() async {
+    final ConnectivityResult result = await _connectivity.checkConnectivity();
+    setState(() {
+      _connectionStatus = result.toString();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,26 +53,32 @@ class PointsScreen extends StatelessWidget {
             PointsEntryCard(
               purchaseDescription: 'Coffee Purchase - Double Points Weekend',
               pointsEarned: 10,
+              connectionStatus: _connectionStatus,
             ),
             PointsEntryCard(
               purchaseDescription: 'Lunch Combo - Triple Points Tuesday',
               pointsEarned: 15,
+              connectionStatus: _connectionStatus,
             ),
             PointsEntryCard(
               purchaseDescription: 'Afternoon Snack - Happy Hour Special',
               pointsEarned: 5,
+              connectionStatus: _connectionStatus,
             ),
             PointsEntryCard(
               purchaseDescription: 'Dinner Date - Weekend Special',
               pointsEarned: 20,
+              connectionStatus: _connectionStatus,
             ),
             PointsEntryCard(
               purchaseDescription: 'Late-night Coffee - Midnight Brew',
               pointsEarned: 8,
+              connectionStatus: _connectionStatus,
             ),
             PointsEntryCard(
               purchaseDescription: 'Weekend Brunch - Family Gathering',
               pointsEarned: 12,
+              connectionStatus: _connectionStatus,
             ),
           ],
         ),
@@ -71,6 +105,15 @@ class PointsScreen extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => MenuList()),
+                );
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.delivery_dining, color: Colors.white),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => DeliveryScreen()),
                 );
               },
             ),
@@ -104,10 +147,12 @@ class PointsScreen extends StatelessWidget {
 class PointsEntryCard extends StatelessWidget {
   final String purchaseDescription;
   final int pointsEarned;
+  final String connectionStatus;
 
   PointsEntryCard({
     required this.purchaseDescription,
     required this.pointsEarned,
+    required this.connectionStatus,
   });
 
   @override
@@ -134,6 +179,14 @@ class PointsEntryCard extends StatelessWidget {
               style: TextStyle(
                 fontSize: 16.0,
                 color: Colors.brown[300],
+              ),
+            ),
+            SizedBox(height: 10.0),
+            Text(
+              'Connection Status: $connectionStatus',
+              style: TextStyle(
+                fontSize: 14.0,
+                color: Colors.grey[600],
               ),
             ),
           ],

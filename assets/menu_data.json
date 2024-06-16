@@ -1,0 +1,134 @@
+[
+  {
+    "name": "Espresso",
+    "description": "Intense, rich, and full-bodied espresso",
+    "price": 2.99,
+    "image": "assets/coffee1.png",
+    "details": {
+      "ingredients": "Finely ground coffee beans",
+      "calories": 5,
+      "caffeine": 63
+    }
+  },
+  {
+    "name": "Cappuccino",
+    "description": "Smooth espresso combined with frothy steamed milk",
+    "price": 3.49,
+    "image": "assets/coffee2.jpg",
+    "details": {
+      "ingredients": "Espresso, steamed milk, milk foam",
+      "calories": 120,
+      "caffeine": 63
+    }
+  },
+  {
+    "name": "Latte",
+    "description": "Creamy espresso with steamed milk and a light foam",
+    "price": 3.99,
+    "image": "assets/coffee3.jpg",
+    "details": {
+      "ingredients": "Espresso, steamed milk, milk foam",
+      "calories": 190,
+      "caffeine": 63
+    }
+  },
+  {
+    "name": "Mocha",
+    "description": "Espresso with rich chocolate and steamed milk",
+    "price": 4.29,
+    "image": "assets/coffee4.jpg",
+    "details": {
+      "ingredients": "Espresso, chocolate syrup, steamed milk, whipped cream",
+      "calories": 300,
+      "caffeine": 63
+    }
+  },
+  {
+    "name": "Macchiato",
+    "description": "Espresso with a dollop of foamed milk",
+    "price": 3.79,
+    "image": "assets/coffee5.png",
+    "details": {
+      "ingredients": "Espresso, milk foam",
+      "calories": 70,
+      "caffeine": 63
+    }
+  },
+  {
+    "name": "Americano",
+    "description": "Espresso with hot water, creating a strong coffee flavor",
+    "price": 3.29,
+    "image": "assets/coffee2.jpg",
+    "details": {
+      "ingredients": "Espresso, hot water",
+      "calories": 10,
+      "caffeine": 63
+    }
+  },
+  {
+    "name": "Affogato",
+    "description": "Espresso poured over a scoop of vanilla ice cream",
+    "price": 4.99,
+    "image": "assets/coffee1.png",
+    "details": {
+      "ingredients": "Espresso, vanilla ice cream",
+      "calories": 270,
+      "caffeine": 63
+    }
+  },
+  {
+    "name": "Flat White",
+    "description": "Espresso with velvety steamed milk",
+    "price": 4.49,
+    "image": "assets/coffee3.jpg",
+    "details": {
+      "ingredients": "Espresso, steamed milk",
+      "calories": 130,
+      "caffeine": 63
+    }
+  },
+  {
+    "name": "Irish Coffee",
+    "description": "Coffee with Irish whiskey and topped with cream",
+    "price": 5.49,
+    "image": "assets/coffee2.jpg",
+    "details": {
+      "ingredients": "Coffee, Irish whiskey, cream",
+      "calories": 210,
+      "caffeine": 70
+    }
+  },
+  {
+    "name": "Turkish Coffee",
+    "description": "Unfiltered coffee brewed with finely ground coffee beans",
+    "price": 4.79,
+    "image": "assets/coffee4.jpg",
+    "details": {
+      "ingredients": "Finely ground coffee beans, water",
+      "calories": 10,
+      "caffeine": 60
+    }
+  },
+  {
+    "name": "Ristretto",
+    "description": "Very short, intense espresso shot",
+    "price": 3.19,
+    "image": "assets/coffee1.png",
+    "details": {
+      "ingredients": "Finely ground coffee beans",
+      "calories": 5,
+      "caffeine": 80
+    }
+  },
+  {
+    "name": "Vienna Coffee",
+    "description": "Espresso with whipped cream",
+    "price": 4.59,
+    "image": "assets/coffee2.jpg",
+    "details": {
+      "ingredients": "Espresso, whipped cream",
+      "calories": 150,
+      "caffeine": 63
+    }
+  }
+]

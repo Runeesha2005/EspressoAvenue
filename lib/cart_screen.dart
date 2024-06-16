@@ -1,11 +1,87 @@
-
-import 'package:first_flutter_app/menulist.dart';
+import 'package:first_flutter_app/delivery.dart';
 import 'package:flutter/material.dart';
-import 'notifications_screen.dart';
-import 'menu_screen.dart';
-import 'account_screen.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:contacts_service/contacts_service.dart';
 
-class CartScreen extends StatelessWidget {
+import 'notifications_screen.dart';
+import 'account_screen.dart';
+import 'menulist.dart';
+
+class CartScreen extends StatefulWidget {
+  @override
+  _CartScreenState createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
+  String _location = 'Press button to get location';
+  String _contactInfo = 'Press button to get contact info';
+
+  Future<void> _getCurrentLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      setState(() {
+        _location = 'Location services are disabled.';
+      });
+      return;
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        setState(() {
+          _location = 'Location permissions are denied.';
+        });
+        return;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      setState(() {
+        _location = 'Location permissions are permanently denied.';
+      });
+      return;
+    }
+
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    setState(() {
+      _location = 'Lat: ${position.latitude}, Long: ${position.longitude}';
+    });
+  }
+
+  Future<void> _getContactInformation() async {
+    var status = await Permission.contacts.request();
+
+    if (status.isGranted) {
+      Iterable<Contact> contacts = await ContactsService.getContacts();
+
+      if (contacts.isNotEmpty) {
+        Contact contact = contacts.first;
+        setState(() {
+          _contactInfo = 'Name: ${contact.displayName}\nPhone: ${contact.phones?.first.value ?? 'N/A'}';
+        });
+      } else {
+        setState(() {
+          _contactInfo = 'No contacts found.';
+        });
+      }
+    } else if (status.isDenied) {
+      setState(() {
+        _contactInfo = 'Contacts permission denied.';
+      });
+    } else {
+      setState(() {
+        _contactInfo = 'Contacts permission permanently denied.';
+      });
+      openAppSettings(); // Opens settings so the user can grant the permission manually
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,26 +94,71 @@ class CartScreen extends StatelessWidget {
         ),
         backgroundColor: Colors.brown,
       ),
-      body: ListView(
-        padding: EdgeInsets.all(16.0),
-        children: [
-          CartItem(
-            productName: 'Cappuccino',
-            price: 4.99,
-            quantity: 2,
-          ),
-          CartItem(
-            productName: 'Latte',
-            price: 5.99,
-            quantity: 1,
-          ),
-          CartItem(
-            productName: 'Chocolate Chip Pancakes',
-            price: 6.99,
-            quantity: 3,
-          ),
-          // Add more CartItem widgets as needed
-        ],
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              child: ListView(
+                children: [
+                  CartItem(
+                    productName: 'Cappuccino',
+                    price: 4.99,
+                    quantity: 2,
+                  ),
+                  CartItem(
+                    productName: 'Latte',
+                    price: 5.99,
+                    quantity: 1,
+                  ),
+                  CartItem(
+                    productName: 'Chocolate Chip Pancakes',
+                    price: 6.99,
+                    quantity: 3,
+                  ),
+                  // Add more CartItem widgets as needed
+                ],
+              ),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _getCurrentLocation,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.location_on),
+                  SizedBox(width: 10),
+                  Text('Get Location'),
+                ],
+              ),
+            ),
+            SizedBox(height: 20),
+            Text(
+              _location,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 40),
+            ElevatedButton(
+              onPressed: _getContactInformation,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.contacts),
+                  SizedBox(width: 10),
+                  Text('Get Contact Info'),
+                ],
+              ),
+            ),
+            SizedBox(height: 20),
+            Text(
+              _contactInfo,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       ),
       bottomNavigationBar: BottomAppBar(
         color: Colors.brown,
@@ -48,10 +169,6 @@ class CartScreen extends StatelessWidget {
               icon: Icon(Icons.home, color: Colors.white),
               onPressed: () {
                 // Navigate to the home screen or perform home-related action
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => HomeScreen()),
-                // );
               },
             ),
             IconButton(
@@ -61,6 +178,15 @@ class CartScreen extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => MenuList()),
+                );
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.delivery_dining, color: Colors.white),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => DeliveryScreen()),
                 );
               },
             ),

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "518014622271",
+    "project_id": "espressoavenue-7637b",
+    "storage_bucket": "espressoavenue-7637b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:518014622271:android:8b8cc6ea825c2f13be768a",
+        "android_client_info": {
+          "package_name": "com.apiit.first_flutter_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3iaiYlPoTgEZ3KpNagufSQTNEGOzdeP8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
